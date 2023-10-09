@@ -27,5 +27,5 @@ public:
 	TSet operator ~();
 	TSet operator *(TSet& obj2);
 	friend std::istream& operator >>(std::istream& is, TSet& st);
-	friend std::ostream& operator <<(std::ostream& os, const TSet& st);
+	friend std::ostream& operator <<(std::ostream& os, TSet& st);
 };

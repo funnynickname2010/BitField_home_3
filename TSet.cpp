@@ -182,7 +182,7 @@ std::istream& operator>>(std::istream& is, TSet& st)
 		inps.ignore();
 	}
 
-	if (is.rdstate() == std::ios::failbit)
+	/*if (is.rdstate() == std::ios::failbit)
 	{
 		std::cout << "//////INPUT ERROR\n";
 
@@ -190,7 +190,7 @@ std::istream& operator>>(std::istream& is, TSet& st)
 		{
 			st.Exclude(i);
 		}
-	}
+	}*/
 
 	// Clear any error flags that may have been set on the stream
 	is.clear();

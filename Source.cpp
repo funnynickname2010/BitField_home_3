@@ -27,7 +27,7 @@ void if_set_isnt_initialized(bool* set_created_array, int index, TSet& set_op)
 	{
 		unsigned int temp_size = 1;
 
-		std::wcout << "Input size of the bitfield in bits: ";
+		std::wcout << "Input size of the characteristic vector of the set: ";
 		std::wcin >> temp_size;
 
 		TSet temp_set(temp_size);
@@ -66,7 +66,7 @@ int main()
 
 	do
 	{
-		std::cout << "\n////////////////////////////CHOOSE AN OPTION: ";
+		std::cout << "\n///////////////CHOOSE AN OPTION: ";
 		std::cin >> option;
 
 		switch (option)
@@ -80,7 +80,12 @@ int main()
 
 			if_set_isnt_initialized(set_initialized, which_set, TSetArray[which_set]);
 
-			std::cout << "\nPlease input the bitfield: ";
+			std::cout << "\nPlease input the set: ";
+
+			for (int i = 0; i < TSetArray[which_set].size; i++)
+			{
+				TSetArray[which_set].Exclude(i);
+			}
 
 			std::cin >> TSetArray[which_set];
 
@@ -91,7 +96,7 @@ int main()
 			int which_set;
 			int remove_or_add_option;
 
-			std::cout << "\nDo you want to input set A or set B?\nA - 0\nB - 1\n";
+			std::cout << "\nSet A or set B?\nA - 0\nB - 1\n";
 			std::cin >> which_set;
 
 			std::cout << "\nDo you want add or remove a number?\nRemove - 0\nAdd - 1\n";
@@ -108,13 +113,13 @@ int main()
 
 			if (remove_or_add_option == 1)
 			{
-				UnsignedIntCorrectInput(number_set, "\nInput a number: ", 0, (TSetArray[which_set].size));
+				UnsignedIntCorrectInput(number_set, "\nInput a number: ", 0, (TSetArray[which_set].size - 1));
 
 				TSetArray[which_set].Include(number_set);
 			}
 			else if (remove_or_add_option == 0)
 			{
-				UnsignedIntCorrectInput(number_set, "\nInput a number: ", 0, (TSetArray[which_set].size));
+				UnsignedIntCorrectInput(number_set, "\nInput a number: ", 0, (TSetArray[which_set].size - 1));
 
 				TSetArray[which_set].Exclude(number_set);
 			}
@@ -134,9 +139,9 @@ int main()
 
 			unsigned int index = 0;
 
-			UnsignedIntCorrectInput(index, "\nInput index: ", 0, TSetArray[which_set].indicator_vector.reserved_ints * 32);
+			UnsignedIntCorrectInput(index, "\nInput index: ", 0, (TSetArray[which_set].size - 1));
 
-			if (TSetArray[which_set].CheckIfBelongs(which_set))
+			if (TSetArray[which_set].CheckIfBelongs(index))
 			{
 				std::cout << "The number belongs to the set\n";
 			}
