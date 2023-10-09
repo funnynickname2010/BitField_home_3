@@ -1,17 +1,31 @@
 #pragma once
 #include "BitField.h"
+#include <iostream>
+#include <string>
+#include <sstream>
 
 class TSet
 {
 public:
 
-	unsigned int size;
-	BitField bitfield_set;
-	
-	TSet(const unsigned int size);
-	TSet(const TSet& op2);
-	TSet(const BitField& bitfield_op);
-	
+	BitField indicator_vector;
+	unsigned int size = 0;
 
+	explicit TSet(unsigned int n);
+	TSet(TSet& obj2);
+	TSet(BitField& obj2);
+	TSet();
+
+	operator BitField();
+
+	void Include(unsigned int index);
+	void Exclude(unsigned int index);
+	bool CheckIfBelongs(unsigned int index);
+
+	const TSet& operator =(const TSet& obj2);
+	TSet operator +(TSet& obj2);
+	TSet operator ~();
+	TSet operator *(TSet& obj2);
+	friend std::istream& operator >>(std::istream& is, TSet& st);
+	friend std::ostream& operator <<(std::ostream& os, const TSet& st);
 };
-

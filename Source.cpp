@@ -1,200 +1,207 @@
-#include "BitField.h"
+#include "TSet.h"
 #include <string>
 #include <sstream>
 
 void InputRow(BitField& obj);
 void OutputRow(BitField& obj);
 
-void UnsignedIntCorrectInput(unsigned int& container, std::string str, unsigned int part_condition);
-
-void UnsignedIntCorrectInput(unsigned int& container, std::string str, unsigned int part_condition)
+void UnsignedIntCorrectInput(unsigned int& container, std::string str, int lower_bound, int upper_bound)
 {
 	do {
 		std::cout << str;
 		std::cin >> container;
-	} while ((container > part_condition) || (container < 0));
+	} while ((container > upper_bound) || (container < lower_bound));
 }
 
-void if_field_isnt_initialized(bool* field_created_array, int index, BitField& bitfield_op)
+void UnsignedIntCorrectInput(unsigned int& container, std::string str, int lower_bound, int upper_bound, int kstl)
 {
-	if (field_created_array[index] != 1)
+	do {
+		std::cout << str;
+		std::cin >> container;
+	} while ((container > upper_bound) || (container != 0 && container != 1));
+}
+
+void if_set_isnt_initialized(bool* set_created_array, int index, TSet& set_op)
+{
+	if (set_created_array[index] != 1)
 	{
 		unsigned int temp_size = 1;
 
 		std::wcout << "Input size of the bitfield in bits: ";
 		std::wcin >> temp_size;
 
-		bitfield_op.ChangeSize(temp_size);
-		field_created_array[index] = 1;
+		TSet temp_set(temp_size);
+		set_op = temp_set;
+		set_created_array[index] = 1;
 	}
 }
 
-void Interface()
+int Interface()
 {
-	std::cout << "1. Input a bitfitfield as a row\n";
-	std::cout << "2. Change a single bit of a bitfield\n";
-	std::cout << "3. Check state of a bit\n";
-	std::cout << "4. Test | operator\n";
-	std::cout << "5. Test & operator\n";
-	std::cout << "6. Print the bitfield\n";
-	std::cout << "7. Print menu\n";
-	std::cout << "8. Exit\n";
+	int i = 0;
+	std::cout << (i = (i + 1)) << ". Input set\n";
+	std::cout << (i = (i + 1)) << ". Add/Remove an element from a set\n";
+	std::cout << (i = (i + 1)) << ". Check if a number is in set\n";
+	std::cout << (i = (i + 1)) << ". Test + operator\n";
+	std::cout << (i = (i + 1)) << ". Test ~ operator\n";
+	std::cout << (i = (i + 1)) << ". Test * operator\n";
+	std::cout << (i = (i + 1)) << ". Print a set\n";
+	std::cout << (i = (i + 1)) << ". Print menu\n";
+	std::cout << (i = (i + 1)) << ". Exit\n";
+	return i;
 }
 
 int main()
 {
-	int option;
-	int exit_option = 8;
-
-	BitField BitFieldArray[3];
-
-	bool field_initialized[2];
+	TSet TSetArray[3];
+	bool set_initialized[2];
 
 	for (int i = 0; i < 2; i++)
 	{
-		field_initialized[i] = 0;
+		set_initialized[i] = 0;
 	}
 
-	Interface();
+	int option;
+	int exit_option = Interface();
 
 	do
 	{
-		std::cout << "\nChoose an option: ";
+		std::cout << "\n////////////////////////////CHOOSE AN OPTION: ";
 		std::cin >> option;
 
 		switch (option)
 		{
-		case 1:
+		case 1: //Change
 
-			int which_bitfield;
+			int which_set;
 
-			std::cout << "\nDo you want to input bitfield A or bitfield B?\nA - 0\nB - 1\n";
-			std::cin >> which_bitfield;
+			std::cout << "\nDo you want to input set A or set B?\nA - 0\nB - 1\n";
+			std::cin >> which_set;
 
-			if_field_isnt_initialized(field_initialized, which_bitfield, BitFieldArray[which_bitfield]);
+			if_set_isnt_initialized(set_initialized, which_set, TSetArray[which_set]);
 
 			std::cout << "\nPlease input the bitfield: ";
 
-			InputRow(BitFieldArray[which_bitfield]);
+			std::cin >> TSetArray[which_set];
 
 			break;
 
 		case 2:
 		{
-			int which_bitfield;
+			int which_set;
+			int remove_or_add_option;
 
-			std::cout << "\nDo you want to input bitfield A or bitfield B?\nA - 0\nB - 1\n";
-			std::cin >> which_bitfield;
+			std::cout << "\nDo you want to input set A or set B?\nA - 0\nB - 1\n";
+			std::cin >> which_set;
 
-			if_field_isnt_initialized(field_initialized, which_bitfield, BitFieldArray[which_bitfield]);
+			std::cout << "\nDo you want add or remove a number?\nRemove - 0\nAdd - 1\n";
+			std::cin >> remove_or_add_option;
+
+			if_set_isnt_initialized(set_initialized, which_set, TSetArray[which_set]);
 			std::cin.clear();
 
-			unsigned int index = 0;
+			unsigned int number_set = 0;
 			unsigned int value = 0;
 
-			UnsignedIntCorrectInput(index, "\nInput index: ", (BitFieldArray[which_bitfield].reserved_ints * 32));
+			unsigned int zero_temp = 0;
+			unsigned int two_temp = 0;
 
-			value = !BitFieldArray[which_bitfield].CheckState(index);
-
-			//UnsignedIntCorrectInput(value, "\nInput value: ", (value != 0 && value != 1));
-
-			if (value == 0)
+			if (remove_or_add_option == 1)
 			{
-				BitFieldArray[which_bitfield].TurnOff(index);
+				UnsignedIntCorrectInput(number_set, "\nInput a number: ", 0, (TSetArray[which_set].size));
+
+				TSetArray[which_set].Include(number_set);
 			}
-			else if (value == 1)
+			else if (remove_or_add_option == 0)
 			{
-				BitFieldArray[which_bitfield].TurnOn(index);
-			}
+				UnsignedIntCorrectInput(number_set, "\nInput a number: ", 0, (TSetArray[which_set].size));
 
-			if (BitFieldArray[which_bitfield].used_bits <= index)
-			{
-				BitFieldArray[which_bitfield].used_bits = index + 1;
+				TSetArray[which_set].Exclude(number_set);
 			}
 
-			OutputRow(BitFieldArray[which_bitfield]);
+			std::cout << TSetArray[which_set];
 
 			break;
 		}
 		case 3:
 		{
-			int which_bitfield;
+			int which_set;
 
-			std::cout << "\nDo you want to check a bit in bitfield A or bitfield B?\nA - 0\nB - 1\n\n";
-			std::cin >> which_bitfield;
+			std::cout << "\nDo you want to check a number in set A or set B?\nA - 0\nB - 1\n\n";
+			std::cin >> which_set;
 
-			if_field_isnt_initialized(field_initialized, which_bitfield, BitFieldArray[which_bitfield]);
+			if_set_isnt_initialized(set_initialized, which_set, TSetArray[which_set]);
 
 			unsigned int index = 0;
 
-			UnsignedIntCorrectInput(index, "\nInput index: ", BitFieldArray[which_bitfield].reserved_ints * 32);
+			UnsignedIntCorrectInput(index, "\nInput index: ", 0, TSetArray[which_set].indicator_vector.reserved_ints * 32);
 
-			std::cout << "Bit with an index " << index << " equals to " << BitFieldArray[which_bitfield].CheckState(index) << std::endl;
+			if (TSetArray[which_set].CheckIfBelongs(which_set))
+			{
+				std::cout << "The number belongs to the set\n";
+			}
+			else
+			{
+				std::cout << "The number does not belong to the set\n";
+			}
 
-			OutputRow(BitFieldArray[which_bitfield]);
+			std::cout << TSetArray[which_set];
 
 			break;
 		}
 		case 4:
 
-			unsigned int inpt;
+			if_set_isnt_initialized(set_initialized, 0, TSetArray[0]);
+			if_set_isnt_initialized(set_initialized, 1, TSetArray[1]);
 
-			if_field_isnt_initialized(field_initialized, 0, BitFieldArray[0]);
-			if_field_isnt_initialized(field_initialized, 1, BitFieldArray[1]);
+			TSetArray[2] = (TSetArray[0] + TSetArray[1]);
 
-			if (BitFieldArray[0].reserved_ints > BitFieldArray[1].reserved_ints)
-			{
-				BitFieldArray[2].ChangeSize(BitFieldArray[0].reserved_ints);
-			}
-			else
-			{
-				BitFieldArray[2].ChangeSize(BitFieldArray[1].reserved_ints);
-			}
-
-			BitFieldArray[2] = (BitFieldArray[0] | BitFieldArray[1]);
-
-			OutputRow(BitFieldArray[2]);
+			std::cout << TSetArray[2];
 			break;
 
 		case 5:
 
-			if_field_isnt_initialized(field_initialized, 0, BitFieldArray[0]);
-			if_field_isnt_initialized(field_initialized, 1, BitFieldArray[1]);
+			std::cout << "\nDo you want to use set A or set B?\nA - 0\nB - 1\n";
+			std::cin >> which_set;
 
-			if (BitFieldArray[0].reserved_ints > BitFieldArray[1].reserved_ints)
-			{
-				BitFieldArray[2].ChangeSize(BitFieldArray[0].reserved_ints);
-			}
-			else
-			{
-				BitFieldArray[2].ChangeSize(BitFieldArray[1].reserved_ints);
-			}
+			if_set_isnt_initialized(set_initialized, which_set, TSetArray[which_set]);
 
-			BitFieldArray[2] = (BitFieldArray[0] & BitFieldArray[1]);
+			TSetArray[2] = ~TSetArray[which_set];
 
-			OutputRow(BitFieldArray[2]);
+			std::cout << TSetArray[2];
 			break;
 
 		case 6:
+
+			if_set_isnt_initialized(set_initialized, 0, TSetArray[0]);
+			if_set_isnt_initialized(set_initialized, 1, TSetArray[1]);
+
+			TSetArray[2] = (TSetArray[0] * TSetArray[1]);
+
+			std::cout << TSetArray[2];
+			break;
+
+		case 7:
 		{
 
-			int which_bitfield;
+			int which_set = 0;
 
-			std::cout << "\nWhich bitfield do you want printed?\nA - 0\nB - 1\n";
-			std::cin >> which_bitfield;
+			std::cout << "\nWhich set do you want printed?\nA - 0\nB - 1\n";
+			std::cin.ignore();
+			std::cin >> which_set;
 
-			if (field_initialized[which_bitfield])
+			if (set_initialized[which_set])
 			{
-				OutputRow(BitFieldArray[which_bitfield]);
+				std::cout << TSetArray[which_set];
 			}
 			else
 			{
-				std::cout << "Please input the bitfield first\n";
+				std::cout << "Please input the set first\n";
 			}
 
 			break;
 		}
-		case 7:
+		case 8:
 
 			std::cout << "\n";
 			Interface();
@@ -206,13 +213,19 @@ int main()
 }
 
 
-
+/*
 void InputRow(BitField& obj)
 {
 	char* input;
 	input = new char[obj.reserved_ints * 32];
 	std::cin.clear();
 	std::cin >> input;
+	obj.used_bits = 0;
+
+	for (unsigned int i = 0; i < (obj.reserved_ints * 32); i++)
+	{
+		obj.TurnOff(i);
+	}
 
 	for (unsigned int i = 0; i < (obj.reserved_ints * 32); i++)
 	{
@@ -237,7 +250,7 @@ void InputRow(BitField& obj)
 
 void OutputRow(BitField& obj)
 {
-	int* output = new int[obj.used_bits];
+	int* output = new int[obj.reserved_ints * 32];
 
 	for (unsigned int i = 0; i < obj.used_bits; i++)
 	{
@@ -245,7 +258,7 @@ void OutputRow(BitField& obj)
 	}
 
 	std::cout << "\n";
-	
+
 	for (unsigned int i = 0; i < obj.used_bits; i++)
 	{
 		std::cout << output[i];
@@ -254,4 +267,4 @@ void OutputRow(BitField& obj)
 	std::cout << "\n";
 
 	delete[] output;
-}
+}*/
